@@ -1,61 +1,61 @@
 ge_is_megalopolis_state = {
 	OR = {
 		has_state_category = megalopolis
-		has_state_category = twelve
-		has_state_category = conurbation
+		has_state_category = ge_twelve
+		has_state_category = ge_conurbation
 	}
 }
 
 ge_is_metropolis_state = {
 	OR = {
 		has_state_category = metropolis
-		has_state_category = ten
-		has_state_category = eleven
+		has_state_category = ge_ten
+		has_state_category = ge_eleven
 	}
 }
 
 ge_is_large_city_state = {
 	OR = {
 		has_state_category = large_city
-		has_state_category = eight
-		has_state_category = nine
+		has_state_category = ge_eight
+		has_state_category = ge_nine
 	}
 }
 
 ge_is_city_state = {
 	OR = {
 		has_state_category = city
-		has_state_category = major_port
-		has_state_category = six
-		has_state_category = seven
-		has_state_category = large_suburb
+		has_state_category = ge_major_port
+		has_state_category = ge_six
+		has_state_category = ge_seven
+		has_state_category = ge_large_suburb
 	}
 }
 
 ge_is_large_town_state = {
 	OR = {
 		has_state_category = large_town
-		has_state_category = port
-		has_state_category = five
-		has_state_category = suburb
+		has_state_category = ge_port
+		has_state_category = ge_five
+		has_state_category = ge_suburb
 	}
 }
 
 ge_is_town_state = {
 	OR = {
 		has_state_category = town
-		has_state_category = minor_port
-		has_state_category = four
-		has_state_category = village
-		has_state_category = developed_rural
+		has_state_category = ge_minor_port
+		has_state_category = ge_four
+		has_state_category = ge_village
+		has_state_category = ge_developed_rural
 	}
 }
 
 ge_is_rural_state = {
 	OR = {
 		has_state_category = rural
-		has_state_category = two
-		has_state_category = three
+		has_state_category = ge_two
+		has_state_category = ge_three
 		has_state_category = large_island 
 	}
 }
@@ -63,7 +63,7 @@ ge_is_rural_state = {
 ge_is_pastoral_state = {
 	OR = {
 		has_state_category = pastoral
-		has_state_category = one
+		has_state_category = ge_one
 	}
 }
 
@@ -73,7 +73,7 @@ ge_is_wasteland_state = {
 		has_state_category = small_island 
 		has_state_category = tiny_island 
 		has_state_category = enclave
-		has_state_category = one_island 
-		has_state_category = zero_island 
+		has_state_category = ge_one_island 
+		has_state_category = ge_zero_island 
 	}
 }
