@@ -54,3 +54,20 @@ defined_text = {
     text = { trigger = { check_variable = { var = global.ge_deal_3_id value = 12 compare = equals } } localization_key = GE_DEAL_TRANS }
     text = { localization_key = GE_DEAL_EMPTY }
 }
+defined_text = {
+    name = GetGeTargetStateStatus
+    text = { 
+        trigger = { has_country_flag = ge_buy_state_selected } 
+        localization_key = GE_TARGET_STATE_FOUND 
+    }
+    text = { 
+        localization_key = GE_TARGET_STATE_NONE 
+    }
+}
+
+defined_text = {
+    name = GetGeGDPGraphText
+    text = { 
+        localization_key = GE_GDP_GRAPH_TEXT 
+    }
+}

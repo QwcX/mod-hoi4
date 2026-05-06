@@ -276,7 +276,58 @@ guiTypes = {
 				buttonType = { name = "ge_build_civ_button" position = { x = 253 y = 19 } quadTextureSprite = "GFX_button_94x31" buttonFont = "hoi_16mbs" buttonText = "GE_BTN_BUILD" scale = 0.8 clicksound = click_default pdx_tooltip = "GE_CIV_TOOLTIP" pdx_tooltip_delayed = "GE_CIV_TOOLTIP_DELAYED" }
 			}
 		}
-	}
+
+                # ================== ВКЛАДКА "НАЦИОНАЛЬНЫЙ БАНК" (График ВНП) ==================
+                containerWindowType = {
+                        name = "bank_panel" position = { x = 395 y = 140 } size = { width = 735 height = 560 }
+                        
+                        # Заголовок раздела
+                        instantTextBoxType = { name = "bank_title" position = { x = 0 y = 0 } font = "hoi_18mbs" text = "GE_BANK_TITLE" format = center maxWidth = 735 }
+                        
+                        # Основная информация о экономике
+                        containerWindowType = {
+                                name = "economy_stats_entry" position = { x = 20 y = 30 } size = { width = 695 height = 100 }
+                                
+                                # Строка 1: ВНП и доход
+                                instantTextBoxType = { name = "gdp_label" position = { x = 0 y = 5 } font = "hoi_16mbs" text = "GE_GDP_LABEL" maxWidth = 80 format = left }
+                                instantTextBoxType = { name = "gdp_value" position = { x = 85 y = 5 } font = "hoi_16mbs" text = "[?ge_base_gdp|0]$" maxWidth = 120 format = left text_color_code = G }
+                                
+                                instantTextBoxType = { name = "income_label" position = { x = 230 y = 5 } font = "hoi_16mbs" text = "GE_INCOME_LABEL" maxWidth = 80 format = left }
+                                instantTextBoxType = { name = "income_value" position = { x = 315 y = 5 } font = "hoi_16mbs" text = "[?ge_daily_income|0]$" maxWidth = 120 format = left text_color_code = G }
+                                
+                                instantTextBoxType = { name = "expense_label" position = { x = 460 y = 5 } font = "hoi_16mbs" text = "GE_EXPENSE_LABEL" maxWidth = 80 format = left }
+                                instantTextBoxType = { name = "expense_value" position = { x = 545 y = 5 } font = "hoi_16mbs" text = "[?ge_daily_expense|0]$" maxWidth = 120 format = left text_color_code = R }
+                                
+                                # Строка 2: Баланс и тренд
+                                instantTextBoxType = { name = "net_label" position = { x = 0 y = 35 } font = "hoi_16mbs" text = "GE_NET_LABEL" maxWidth = 80 format = left }
+                                instantTextBoxType = { name = "net_value" position = { x = 85 y = 35 } font = "hoi_18mbs" text = "[?ge_daily_total|0]$" maxWidth = 150 format = left text_color_code = Y }
+                                
+                                instantTextBoxType = { name = "trend_label" position = { x = 260 y = 35 } font = "hoi_16mbs" text = "Тренд:" maxWidth = 60 format = left }
+                                instantTextBoxType = { name = "trend_value" position = { x = 325 y = 35 } font = "hoi_16mbs" text = "[GetGeGDPGraphText]" maxWidth = 150 format = left }
+                                
+                                # Описание графика
+                                instantTextBoxType = { name = "graph_desc" position = { x = 0 y = 70 } font = "hoi_14b" text = "GE_GDP_GRAPH_TEXT" maxWidth = 695 format = center }
+                        }
+                        
+                        # Область для графика (визуальная рамка)
+                        iconType = {
+                                name = "gdp_graph_frame"
+                                spriteType = "GFX_generic_box"
+                                position = { x = 50 y = 140 }
+                                size = { x = 635 y = 350 }
+                                pdx_tooltip = "GE_GDP_GRAPH_TOOLTIP"
+                        }
+                        
+                        # Заглушка для будущего графика (текст по центру)
+                        instantTextBoxType = { 
+                                name = "gdp_graph_placeholder" 
+                                position = { x = 367 y = 300 } 
+                                font = "hoi_16mbs" 
+                                text = "§Y[График ВНП за 12 месяцев будет здесь]§!" 
+                                format = center 
+                                maxWidth = 600 
+                        }
+                }
 
     # HARİTA ÜZERİNDE ÇIKACAK OLAN ONAY PENCERELERİ
 	containerWindowType = {
