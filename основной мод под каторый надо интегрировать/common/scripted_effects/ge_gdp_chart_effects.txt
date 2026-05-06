@@ -1,0 +1,237 @@
+ge_gdpui_add_point_to_graph = {
+	add_to_variable = { THIS.ge_gdpui_count = 1 }
+
+	clear_array = THIS.ge_gdpui_graph_offsets
+	clear_array = THIS.ge_gdpui_graph_slopes
+
+	for_each_loop = {
+		array = THIS.ge_gdp_array
+		index = i
+
+		# y value
+		set_variable = { THIS.ge_gdpui_y_position = THIS.ge_gdp_array^i }
+		subtract_from_variable = { THIS.ge_gdpui_y_position = THIS.ge_min_gdp }
+		divide_variable = { THIS.ge_gdpui_y_position = THIS.ge_gdp_interval }
+		multiply_variable = { THIS.ge_gdpui_y_position = 100 }
+		round_variable = THIS.ge_gdpui_y_position
+
+		if = {
+			limit = { check_variable = { i > 0 } }
+
+			# The y position offset is the inverse of the y position
+			set_temp_variable = { offset = THIS.ge_gdpui_last_y_position }
+			multiply_temp_variable = { offset = -1 }
+			add_to_array = {
+				array = THIS.ge_gdpui_graph_offsets
+				value = offset
+			}
+
+			# The 'slope' here is simply the difference between the current y value and the last one, divided by 2 plus 50
+			# These last two changes are needed for the shader
+			set_temp_variable = { diff = THIS.ge_gdpui_y_position }
+			subtract_from_temp_variable = { diff = THIS.ge_gdpui_last_y_position }
+			divide_temp_variable = { diff = 2 }
+			add_to_temp_variable = { diff = 50 }
+			add_to_array = {
+				array = THIS.ge_gdpui_graph_slopes
+				value = diff
+			}
+		}
+		set_variable = { THIS.ge_gdpui_last_y_position = THIS.ge_gdpui_y_position }
+	}
+
+	# Prune arrays so they hold at most 50 elements
+	if = {
+		limit = { check_variable = { THIS.ge_gdpui_count > 50 } }
+		remove_from_array = { array = THIS.ge_gdpui_graph_offsets index = 0 }
+		remove_from_array = { array = THIS.ge_gdpui_graph_slopes index = 0 }
+		remove_from_array = { array = THIS.ge_gdpui_numbers index = 0 }
+		remove_from_array = { array = THIS.ge_gdp_array index = 0 }
+	}
+
+	add_to_array = { THIS.ge_gdpui_numbers = THIS.ge_gdpui_count }
+
+	add_to_variable = { THIS.ge_gdpui_graph_dirty = 1 }
+}
+
+@gdp_civ_mult = 0.35
+@gdp_mil_mult = 0.25
+@gdp_nav_mult = 0.15
+
+# small due to overlap with gained civs from trade
+@gdp_res_oil_mult = 0.25
+@gdp_res_alu_mult = 0.05
+@gdp_res_rub_mult = 0.1
+@gdp_res_tun_mult = 0.05
+@gdp_res_ste_mult = 0.05
+@gdp_res_chr_mult = 0.1
+
+ge_calculate_gdp_chart = {
+	set_variable = { THIS.ge_civilian_gdp = 0 }
+	set_variable = { THIS.ge_military_gdp = 0 }
+	set_variable = { THIS.ge_naval_gdp = 0 }
+	set_variable = { THIS.ge_resource_gdp = 0 }
+
+	every_controlled_state = {
+		set_temp_variable = { ge_civilian_state_gdp = THIS.non_damaged_building_level@industrial_complex }
+		if = {
+			limit = {
+				has_dlc = Gotterdammerung
+				commercial_nuclear_reactor > 0
+			}
+			multiply_temp_variable = { ge_civilian_state_gdp = 1.5 }
+		}
+		set_temp_variable = { ge_military_state_gdp = THIS.non_damaged_building_level@arms_factory }
+		if = {
+			limit = { radar_station > 0 }
+			multiply_temp_variable = { ge_military_state_gdp = 1.5 }
+		}
+		set_temp_variable = { ge_naval_state_gdp = THIS.non_damaged_building_level@dockyard }
+		if = {
+			limit = { naval_base > 0 }
+			multiply_temp_variable = { ge_naval_state_gdp = 1.5 }
+		}
+		add_to_variable = { PREV.ge_civilian_gdp = ge_civilian_state_gdp }
+		add_to_variable = { PREV.ge_military_gdp = ge_military_state_gdp }
+		add_to_variable = { PREV.ge_naval_gdp = ge_naval_state_gdp }
+
+		set_temp_variable = { ge_civilian_state_gdp = 0 }
+		set_temp_variable = { ge_military_state_gdp = 0 }
+		set_temp_variable = { ge_naval_state_gdp = 0 }
+	}
+
+	# offmap factories
+	add_to_temp_variable = { offmap_civs = num_of_civilian_factories }
+	subtract_from_temp_variable = { offmap_civs = THIS.ge_civilian_gdp }
+	add_to_variable = { THIS.ge_civilian_gdp = offmap_civs }
+
+	add_to_temp_variable = { offmap_mils = num_of_military_factories }
+	subtract_from_temp_variable = { offmap_mils = THIS.ge_military_gdp }
+	add_to_variable = { THIS.ge_military_gdp = offmap_mils }
+
+	add_to_temp_variable = { offmap_docks = num_of_naval_factories }
+	subtract_from_temp_variable = { offmap_docks = THIS.ge_naval_gdp }
+	add_to_variable = { THIS.ge_naval_gdp = offmap_docks }
+
+	# resources
+	if = {
+		limit = {
+			has_game_rule = {
+				rule = sgdpui_gdp_resources
+				option = RULE_SGDPUI_RESOURCES_EXPORTED
+			}
+		}
+		add_to_temp_variable = { oil_gdp = THIS.resource_exported@oil }
+		add_to_temp_variable = { alu_gdp = THIS.resource_exported@aluminium }
+		add_to_temp_variable = { rub_gdp = THIS.resource_exported@rubber }
+		add_to_temp_variable = { tun_gdp = THIS.resource_exported@tungsten }
+		add_to_temp_variable = { ste_gdp = THIS.resource_exported@steel }
+		add_to_temp_variable = { chr_gdp = THIS.resource_exported@chromium }
+	}
+	else_if = {
+		limit = {
+			has_game_rule = {
+				rule = sgdpui_gdp_resources
+				option = RULE_SGDPUI_RESOURCES_PRODUCED
+			}
+		}
+		add_to_temp_variable = { oil_gdp = THIS.resource_produced@oil }
+		add_to_temp_variable = { alu_gdp = THIS.resource_produced@aluminium }
+		add_to_temp_variable = { rub_gdp = THIS.resource_produced@rubber }
+		add_to_temp_variable = { tun_gdp = THIS.resource_produced@tungsten }
+		add_to_temp_variable = { ste_gdp = THIS.resource_produced@steel }
+		add_to_temp_variable = { chr_gdp = THIS.resource_produced@chromium }
+	}
+
+	multiply_temp_variable = { oil_gdp = @gdp_res_oil_mult }
+	multiply_temp_variable = { alu_gdp = @gdp_res_alu_mult }
+	multiply_temp_variable = { rub_gdp = @gdp_res_rub_mult }
+	multiply_temp_variable = { tun_gdp = @gdp_res_tun_mult }
+	multiply_temp_variable = { ste_gdp = @gdp_res_ste_mult }
+	multiply_temp_variable = { chr_gdp = @gdp_res_chr_mult }
+
+	add_to_variable = { THIS.ge_resource_gdp = oil_gdp }
+	add_to_variable = { THIS.ge_resource_gdp = alu_gdp }
+	add_to_variable = { THIS.ge_resource_gdp = rub_gdp }
+	add_to_variable = { THIS.ge_resource_gdp = tun_gdp }
+	add_to_variable = { THIS.ge_resource_gdp = ste_gdp }
+	add_to_variable = { THIS.ge_resource_gdp = chr_gdp }
+
+	if = {
+		limit = {
+			has_game_rule = {
+				rule = sgdpui_gdp_formula
+				option = RULE_SGDPUI_FORMULA_ENABLED
+			}
+		}
+		multiply_variable = { THIS.ge_civilian_gdp = @gdp_civ_mult }
+		multiply_variable = { THIS.ge_military_gdp = @gdp_mil_mult }
+		multiply_variable = { THIS.ge_naval_gdp = @gdp_nav_mult }
+	}
+	set_variable = { THIS.total_gdp = THIS.ge_civilian_gdp }
+	add_to_variable = { THIS.total_gdp = THIS.ge_military_gdp }
+	add_to_variable = { THIS.total_gdp = THIS.ge_naval_gdp }
+	add_to_variable = { THIS.total_gdp = THIS.ge_resource_gdp }
+
+	if = {
+		limit = { NOT = { check_variable = { THIS.last_gdp = 0 } } }
+		set_variable = { THIS.gdp_growth = THIS.total_gdp }
+		divide_variable = { THIS.gdp_growth = THIS.last_gdp }
+		subtract_from_variable = { THIS.gdp_growth = 1 }
+	}
+
+	set_variable = { THIS.last_gdp = THIS.total_gdp }
+}
+compute_y_axis_intervals = {
+	add_to_array = { THIS.ge_gdp_array = THIS.total_gdp }
+
+	find_lowest_in_array = {
+		array = THIS.ge_gdp_array
+		value = temp_ge_min_gdp
+		index = temp_ge_min_gdp_i
+	}
+	set_variable = { THIS.ge_min_gdp = temp_ge_min_gdp }
+	set_variable = { THIS.ge_min_gdp_i = temp_ge_min_gdp_i }
+	find_highest_in_array = {
+		array = THIS.ge_gdp_array
+		value = temp_new_max_gdp
+		index = temp_max_gdp_i
+	}
+	set_variable = { THIS.old_max_gdp = temp_new_max_gdp }
+	set_variable = { THIS.max_gdp = temp_new_max_gdp }
+	set_variable = { THIS.max_gdp_i = temp_max_gdp_i }
+
+	# compute y axis intervals
+	set_variable = { THIS.ge_gdp_interval = THIS.max_gdp }
+	subtract_from_variable = { THIS.ge_gdp_interval = THIS.ge_min_gdp }
+	set_temp_variable = { ge_gdp_interval_fifth = THIS.ge_gdp_interval }
+	divide_temp_variable = { ge_gdp_interval_fifth = 5 }
+
+	set_variable = { THIS.sgdpui_100_gdp = THIS.max_gdp }
+	round_variable = THIS.sgdpui_100_gdp
+
+	set_temp_variable = { 80pct = THIS.max_gdp }
+	subtract_from_temp_variable = { 80pct = ge_gdp_interval_fifth }
+	set_variable = { THIS.sgdpui_80_gdp = 80pct }
+	round_variable = THIS.sgdpui_80_gdp
+
+	set_temp_variable = { 60pct = 80pct }
+	subtract_from_temp_variable = { 60pct = ge_gdp_interval_fifth }
+	set_variable = { THIS.sgdpui_60_gdp = 60pct }
+	round_variable = THIS.sgdpui_60_gdp
+
+	set_temp_variable = { 40pct = 60pct }
+	subtract_from_temp_variable = { 40pct = ge_gdp_interval_fifth }
+	set_variable = { THIS.sgdpui_40_gdp = 40pct }
+	round_variable = THIS.sgdpui_40_gdp
+
+	set_temp_variable = { 20pct = 40pct }
+	subtract_from_temp_variable = { 20pct = ge_gdp_interval_fifth }
+	set_variable = { THIS.sgdpui_20_gdp = 20pct }
+	round_variable = THIS.sgdpui_20_gdp
+
+	set_temp_variable = { 00pct = 20pct }
+	subtract_from_temp_variable = { 00pct = ge_gdp_interval_fifth }
+	set_variable = { THIS.sgdpui_00_gdp = 00pct }
+	round_variable = THIS.sgdpui_00_gdp
+}
