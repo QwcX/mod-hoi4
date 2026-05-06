@@ -141,3 +141,18 @@
  ge_market.5.t:0 "War Reparations: [ge_loser_country.GetNameDefCap]"
  ge_market.5.d:0 "As part of the restructuring of [ge_loser_country.GetNameDef], the newly installed puppet administration has agreed to pay substantial war reparations to our government.\n\nWe have liquidated a large portion of their national reserves and transferred them to our own treasury.\n\nTotal funds secured: §G[?ge_latest_loot|0]$§!"
  ge_market.5.a:0 "They will pay for their crimes."
+ # ==========================================
+ # NEW SECTION: GDP GRAPH (National Bank Tab)
+ # ==========================================
+ GE_GDP_GRAPH_TEXT:0 "§YGDP Dynamics and Budget§!\n\nCurrent Daily Income: §G+[?ge_daily_total|0]$§!\n\n§OThe graph shows your GDP changes over the last 12 months.§!"
+ 
+ GE_GDP_LABEL:0 "GDP:"
+ GE_INCOME_LABEL:0 "Income:"
+ GE_EXPENSE_LABEL:0 "Expenses:"
+ GE_NET_LABEL:0 "Balance:"
+ GE_GDP_TREND_UP:0 "§GGrowth§!"
+ GE_GDP_TREND_DOWN:0 "§RDecline§!"
+ GE_GDP_TREND_STABLE:0 "§YStable§!"
+ 
+ GE_BANK_TITLE:0 "National Bank - Economy and Statistics"
+ GE_GDP_GRAPH_TOOLTIP:0 "§YGDP Graph§!\nShows the change in Gross National Product over the last 12 months."
