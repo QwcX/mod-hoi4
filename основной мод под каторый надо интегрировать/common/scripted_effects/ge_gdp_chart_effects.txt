@@ -117,8 +117,8 @@ ge_calculate_gdp_chart = {
 	if = {
 		limit = {
 			has_game_rule = {
-				rule = sgdpui_gdp_resources
-				option = RULE_SGDPUI_RESOURCES_EXPORTED
+				rule = ge_gdpui_gdp_resources
+				option = RULE_GE_GDPUI_RESOURCES_EXPORTED
 			}
 		}
 		add_to_temp_variable = { oil_gdp = THIS.resource_exported@oil }
@@ -131,8 +131,8 @@ ge_calculate_gdp_chart = {
 	else_if = {
 		limit = {
 			has_game_rule = {
-				rule = sgdpui_gdp_resources
-				option = RULE_SGDPUI_RESOURCES_PRODUCED
+				rule = ge_gdpui_gdp_resources
+				option = RULE_GE_GDPUI_RESOURCES_PRODUCED
 			}
 		}
 		add_to_temp_variable = { oil_gdp = THIS.resource_produced@oil }
@@ -160,8 +160,8 @@ ge_calculate_gdp_chart = {
 	if = {
 		limit = {
 			has_game_rule = {
-				rule = sgdpui_gdp_formula
-				option = RULE_SGDPUI_FORMULA_ENABLED
+				rule = ge_gdpui_gdp_formula
+				option = RULE_GE_GDPUI_FORMULA_ENABLED
 			}
 		}
 		multiply_variable = { THIS.ge_civilian_gdp = @gdp_civ_mult }
@@ -234,4 +234,58 @@ compute_y_axis_intervals = {
 	subtract_from_temp_variable = { 00pct = ge_gdp_interval_fifth }
 	set_variable = { THIS.sgdpui_00_gdp = 00pct }
 	round_variable = THIS.sgdpui_00_gdp
+}
+
+ge_compute_y_axis_intervals = {
+        add_to_array = { THIS.ge_gdp_array = THIS.total_gdp }
+
+        find_lowest_in_array = {
+                array = THIS.ge_gdp_array
+                value = temp_ge_min_gdp
+                index = temp_ge_min_gdp_i
+        }
+        set_variable = { THIS.ge_min_gdp = temp_ge_min_gdp }
+        set_variable = { THIS.ge_min_gdp_i = temp_ge_min_gdp_i }
+        find_highest_in_array = {
+                array = THIS.ge_gdp_array
+                value = temp_new_max_gdp
+                index = temp_max_gdp_i
+        }
+        set_variable = { THIS.old_max_gdp = temp_new_max_gdp }
+        set_variable = { THIS.max_gdp = temp_new_max_gdp }
+        set_variable = { THIS.max_gdp_i = temp_max_gdp_i }
+
+        # compute y axis intervals
+        set_variable = { THIS.ge_gdp_interval = THIS.max_gdp }
+        subtract_from_variable = { THIS.ge_gdp_interval = THIS.ge_min_gdp }
+        set_temp_variable = { ge_gdp_interval_fifth = THIS.ge_gdp_interval }
+        divide_temp_variable = { ge_gdp_interval_fifth = 5 }
+
+        set_variable = { THIS.ge_sgdpui_100_gdp = THIS.max_gdp }
+        round_variable = THIS.ge_sgdpui_100_gdp
+
+        set_temp_variable = { ge_80pct = THIS.max_gdp }
+        subtract_from_temp_variable = { ge_80pct = ge_gdp_interval_fifth }
+        set_variable = { THIS.ge_sgdpui_80_gdp = ge_80pct }
+        round_variable = THIS.ge_sgdpui_80_gdp
+
+        set_temp_variable = { ge_60pct = ge_80pct }
+        subtract_from_temp_variable = { ge_60pct = ge_gdp_interval_fifth }
+        set_variable = { THIS.ge_sgdpui_60_gdp = ge_60pct }
+        round_variable = THIS.ge_sgdpui_60_gdp
+
+        set_temp_variable = { ge_40pct = ge_60pct }
+        subtract_from_temp_variable = { ge_40pct = ge_gdp_interval_fifth }
+        set_variable = { THIS.ge_sgdpui_40_gdp = ge_40pct }
+        round_variable = THIS.ge_sgdpui_40_gdp
+
+        set_temp_variable = { ge_20pct = ge_40pct }
+        subtract_from_temp_variable = { ge_20pct = ge_gdp_interval_fifth }
+        set_variable = { THIS.ge_sgdpui_20_gdp = ge_20pct }
+        round_variable = THIS.ge_sgdpui_20_gdp
+
+        set_temp_variable = { ge_00pct = ge_20pct }
+        subtract_from_temp_variable = { ge_00pct = ge_gdp_interval_fifth }
+        set_variable = { THIS.ge_sgdpui_00_gdp = ge_00pct }
+        round_variable = THIS.ge_sgdpui_00_gdp
 }

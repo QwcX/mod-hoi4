@@ -4,19 +4,20 @@
 __pycache__/
 *.o
 *.obj
-dist/
-build/
-target/
+*.out
 
 # Dependencies
-.venv/
 venv/
+.venv/
 node_modules/
+target/
+.gradle/
 
 # Logs and temp files
 *.log
 *.tmp
 *.swp
+*.swo
 
 # Environment
 .env
@@ -34,9 +35,9 @@ Thumbs.db
 # Coverage
 coverage/
 htmlcov/
-*.coverage
+.coverage
 
-# Compressed files
+# Compression
 *.zip
 *.gz
 *.tar

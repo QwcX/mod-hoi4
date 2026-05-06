@@ -742,7 +742,7 @@ calculate_ge_state_GDP = {
 	every_state = {
 		# Only compute for states that have an owner
 		if = {
-			limit = { has_owner = yes }
+			limit = { NOT = { is_state = yes } }
 
 			# Weighted civs (× labour ratio — ge_state_labour_ratio set in main ge_calculate_gdp loop)
 			set_temp_variable = { s_civs = THIS.non_damaged_building_level@industrial_complex }
@@ -871,7 +871,7 @@ calculate_ge_state_GDP = {
 	set_variable = { state_gdp_sum = 0 }
 	every_state = {
 		if = {
-			limit = { has_owner = yes }
+			limit = { NOT = { is_state = yes } }
 			OWNER = { add_to_variable = { state_gdp_sum = PREV.ge_state_GDP } }
 		}
 	}
@@ -881,7 +881,7 @@ calculate_ge_state_GDP = {
 	clamp_variable = { var = state_gdp_correction min = 0.5 max = 2.0 }
 	every_state = {
 		if = {
-			limit = { has_owner = yes }
+			limit = { NOT = { is_state = yes } }
 			OWNER = {
 				# Apply correction
 				multiply_variable = { PREV.ge_state_GDP = state_gdp_correction }
@@ -1063,7 +1063,7 @@ calculate_ge_state_GDP = {
 	# -----------------------
 	every_state = {
 		if = {
-			limit = { has_owner = yes }
+			limit = { NOT = { is_state = yes } }
 			set_variable = { state_living_standard = 1 }
 
 			# Tier 2: Squalid
