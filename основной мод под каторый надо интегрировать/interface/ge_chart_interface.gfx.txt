@@ -1,0 +1,45 @@
+spriteTypes = {
+
+	spriteType = {
+		name = "GFX_ge_chart_background"
+		textureFile = "gfx/interface/ge_chart_background.dds"
+	}
+
+	spriteType = {
+		name = "GFX_ge_chart_chart"
+		textureFile = "gfx/interface/ge_chart_chart.dds"
+	}
+
+	spriteType = {
+		name = "GFX_ge_chart_toggle_button"
+		textureFile = "gfx/interface/ge_chart_toggle_button.dds"
+		noOfFrames = 2
+	}
+
+	spriteType = {
+		name = "GFX_ge_chart_frame_current_gdp"
+		textureFile = "gfx/interface/ge_chart_frame1.dds"
+	}
+
+	spriteType = {
+		name = "GFX_ge_chart_frame_gdp_growth"
+		textureFile = "gfx/interface/ge_chart_frame2.dds"
+	}
+
+	progressbartype = {
+		name = "GFX_ge_chart_line_segment"
+		textureFile1 = "gfx/interface/ge_chart_line_full.dds"
+		textureFile2 = "gfx/interface/ge_chart_line_empty.dds"
+		size = {
+			x = 4
+			y = 200
+		}
+		effectFile = "gfx/FX/ge_chart.lua"
+		horizontal = yes
+	}
+
+	spriteType = {
+		name = "GFX_ge_chart_warning"
+		textureFile = "gfx/texticons/ge_chart_warning.dds"
+	}
+}

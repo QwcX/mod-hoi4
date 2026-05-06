@@ -1,0 +1,303 @@
+================================================================
+FAQ — How is GDP Calculated? How do I increase my GDP?
+================================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Q: HOW IS GDP CALCULATED?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GDP is calculated monthly and has five main components:
+
+─────────────────────────────────────────
+1. INDUSTRIAL SECTOR (Civilian & Military Factories, Dockyards)
+─────────────────────────────────────────
+Each factory contributes to GDP based on WHERE it is located,
+not just how many you have. Every state computes a productivity
+weight that multiplies its factory output:
+
+  State Category weight (city = 1.00 baseline):
+    Megalopolis  ×2.00   ← financial/industrial hub
+    Metropolis   ×1.65
+    Large City   ×1.30
+    City         ×1.00   ← baseline
+    Sparse Urban Region   ×0.60
+    Developed Rural Region         ×0.35
+    Rural        ×0.15
+    Wasteland    ×0.05   ← barely registers
+
+  Infrastructure further modifies this:
+    Inf 0 = ×0.80  |  Inf 3 = ×1.04  |  Inf 5 = ×1.20
+
+  So a megalopolis factory at max infra is worth ~2.40×
+  a city baseline — and ~20× a wasteland factory at min infra.
+
+  IMPORTANT: Only healthy (non-damaged) building levels count.
+  Damaged factories, arms factories, and infrastructure all
+  contribute less until repaired. Strategic bombing of your
+  industrial heartland will directly reduce your GDP.
+
+  POPULATION/WORKFORCE CONSTRAINT:
+  Factories also require a proportional workforce. One factory
+  complex needs ~400k people to operate at full capacity. States
+  with too few people for their factory count are penalized:
+
+    state_labour_ratio = population_k / (factories × 400)
+    Clamped: 0.01% minimum to 100% maximum
+
+    Petsamo (2k pop, 4 factories) → 0.125% of normal output
+    Berlin  (4M pop, 10 factories) → 100%, no penalty
+    Belgrade (1.5M pop, 14 fac.) → ~27%, understaffed
+
+  This is tunable via a commented value in the scripted effects.
+
+Additional modifiers applied on top of factory counts:
+  - Occupied factories: worth only 1/10th
+  - Non-core (but owned) factories: worth 1/3rd
+  - Construction speed bonus: boosts civ factory GDP value
+  - Inflation: deflates real factory value over time
+  - Trade openness: open economies produce more efficiently
+  - Conscription rate: high conscription pulls workers from
+    factories, reducing their GDP contribution
+  - Puppet/overlord extraction: puppets lose a share of their
+    industrial GDP to their overlord
+  - Industrial capacity modifier: factory efficiency affects
+    overall industrial GDP (clamped ×0.50 to ×1.50)
+  - State category composition: the average category of your
+    core states applies a final multiplier to industrial GDP
+
+Military factories contribute at 5× their weighted value.
+Civilian factories contribute at 7× their weighted value.
+Dockyards contribute at 5× their weighted value.
+
+─────────────────────────────────────────
+2. RESOURCE SECTOR (Oil, Coal, Steel, Rubber, Chromium, Aluminium, Tungsten)
+─────────────────────────────────────────
+Each resource is converted to a physical weight in grams and
+valued accordingly. More industrialized nations extract more
+value from their resources (better refining, processing, and
+supply chains), represented by a bonus tied to your industrial
+output. Resource GDP is added on top of industrial GDP.
+
+  RESOURCE WORKFORCE CONSTRAINT (state GDP only):
+  Extraction scales with available workforce, weighted by
+  intensity per resource type:
+    Oil ×15 (drilling, pipeline, refinery — most intensive)
+    Steel ×10  |  Coal ×8  |  Chromium ×5  |  Aluminium ×5
+    Tungsten ×4  |  Rubber ×3 (plantation, least intensive)
+
+  Base threshold: 2k people per workforce-equivalent slot.
+  Texas 1936 (6M pop, ~100 oil slots) → no penalty.
+  2k-person desert state with 10 oil slots → ~98% penalty.
+  Applies to state GDPPC calculations.
+
+─────────────────────────────────────────
+3. AGRICULTURAL SECTOR (Population × Location Quality)
+─────────────────────────────────────────
+Agricultural GDP is driven by your population, but weighted
+by WHERE your people live. It follows a bell curve:
+
+  Megalopolis  ×0.10   ← no farmland, pure urban
+  Metropolis   ×0.25
+  Large City   ×0.50
+  City         ×0.75
+  Sparse Urban Region   ×1.00   ← PEAK — organized farms, market surplus
+  Developed Rural Region         ×0.90
+  Rural        ×0.40   ← subsistence only, no surplus
+  Wasteland    ×0.05   ← can't farm it
+
+  Infrastructure adds a gentle bonus (×0.90 to ×1.10).
+
+A country with 50M people in fertile sparse urban region agricultural
+states will have significantly higher agricultural GDP than
+50M people crammed into megalopolis states or spread across
+wasteland.
+
+─────────────────────────────────────────
+4. POPULATION MODIFIER
+─────────────────────────────────────────
+Larger populations support larger economies. Applied once,
+clamped between 0 and ×1.25. Non-core population counts for
+less than core population.
+
+─────────────────────────────────────────
+5. STABILITY MODIFIER
+─────────────────────────────────────────
+Political stability directly affects economic output:
+  0% stability  → ×0.85 GDP (floor clamped at ×0.70)
+  50% stability → ×1.00 GDP (neutral)
+  100% stability → ×1.15 GDP
+
+Civil wars, coups, wartime political strain, and resistance
+all suppress GDP. A stable government genuinely produces more.
+
+─────────────────────────────────────────
+FINAL STEP: Currency Conversion
+─────────────────────────────────────────
+All values are divided by the gold/USD conversion factor
+(31.1035) to produce figures in 1936 USD equivalents.
+GDP per Capita = Total GDP ÷ Core Population (in millions).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Q: HOW DO I INCREASE MY GDP?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+GDP responds to many levers. Here's what actually moves the needle:
+
+─────────────────────────────────────────
+BIGGEST IMPACT
+─────────────────────────────────────────
+▶ BUILD FACTORIES IN HIGH-CATEGORY STATES
+  Don't just spam factories anywhere. A factory in a megalopolis
+  or metropolis state is worth 2–3× one in a rural state.
+  Check your state categories before deciding where to build.
+
+▶ UPGRADE STATE CATEGORIES
+  If your overhaul mod allows state upgrades (via focuses,
+  decisions, or events), prioritizing category upgrades in your
+  industrial heartland will multiply every factory already there.
+
+▶ BUILD INFRASTRUCTURE IN YOUR INDUSTRIAL STATES
+  Infrastructure multiplies the productivity of every factory
+  in that state. Inf 5 vs Inf 0 is a ×1.20 vs ×0.80 difference
+  — a 50% gap on every factory in that state. Prioritize infra
+  in your megalopolis and metropolis states first.
+
+▶ BUILD MORE FACTORIES (IN THE RIGHT PLACES)
+  Raw factory count still matters — just build them where the
+  productivity multiplier is highest.
+
+─────────────────────────────────────────
+MEDIUM IMPACT
+─────────────────────────────────────────
+▶ MAINTAIN HIGH STABILITY
+  Every 10% of stability above 50% adds ~3% to your GDP.
+  Conversely, dropping below 50% is an increasing penalty.
+  Don't neglect stability during wartime — it costs you GDP.
+
+▶ KEEP TRADE LAWS OPEN
+  Trade openness directly boosts your factory GDP contribution.
+  Free trade and export focus give meaningful bonuses.
+  Closed economies pay a penalty.
+
+▶ AVOID HIGH CONSCRIPTION
+  Conscription pulls workers from factories. Every percentage
+  point of conscription rate reduces the GDP contribution of
+  your civilian factories by 0.5× that rate, and military
+  factories by 0.2× that rate. Only draft heavily when you
+  absolutely need to.
+
+▶ MANAGE INFLATION
+  Inflation deflates the real value of your factory output.
+  If your mod has inflation mechanics, keeping it low preserves
+  your industrial GDP.
+
+─────────────────────────────────────────
+SMALLER / STRUCTURAL IMPACT
+─────────────────────────────────────────
+▶ CONTROL RESOURCE-RICH STATES
+  Resource GDP adds on top of industrial GDP. Oil in particular
+  has high per-unit value. Securing resource states (even as
+  puppets) contributes to your resource sector GDP.
+
+▶ GROW YOUR POPULATION BASE
+  Population drives agricultural GDP and the population modifier.
+  Focus trees that grow population, reduce casualties, or add
+  core states with large populations all help.
+
+▶ HAVE A WELL-DISTRIBUTED POPULATION
+  Your agricultural GDP peaks when your people live in Sparse Urban Region
+  and Developed Rural Region states rather than being concentrated in pure
+  urban or wasteland states. Nothing you can directly control, but
+  worth knowing when evaluating which states to core.
+
+▶ AVOID BEING A PUPPET
+  Puppets bleed a share of their industrial GDP to their overlord.
+  Gaining independence or becoming autonomous dramatically
+  improves your effective industrial GDP.
+
+▶ PROTECT YOUR INDUSTRIAL STATES FROM BOMBING
+  Building damage directly reduces GDP — damaged factories
+  and infrastructure count for less until repaired. Prioritize
+  AA coverage and interceptors over your megalopolis and
+  metropolis states. Repair damaged infra quickly since it
+  multiplies every factory in that state.
+
+▶ BUILD FACTORIES WHERE PEOPLE ACTUALLY LIVE
+  The new population/workforce ratio means factory-spamming
+  empty states is no longer free. A state with 500k people
+  can support roughly one factory at full efficiency. Stack
+  factories in your high-population states first.
+
+▶ KEEP OCCUPIED TERRITORIES MANAGED
+  Occupied factories (not owned, just controlled) only contribute
+  1/10th of their normal GDP value. Non-core owned factories
+  contribute 1/3rd. Coring or returning territory you want to
+  keep long-term is worth it economically.
+
+─────────────────────────────────────────
+GDP PER CAPITA SPECIFICALLY
+─────────────────────────────────────────
+GDPPC = GDP ÷ Core Population. To raise it:
+  - Raise total GDP (everything above)
+  - OR reduce your core population denominator
+    (don't core massive low-GDP states just to grab territory)
+  - Focus tree bonuses to research speed, PP, and industry
+    raise GDPPC tier faster than raw factory building
+  - GDPPC rises slower than GDP for large nations — this is
+    intentional. A country of 500M growing its economy still
+    has to divide that GDP across 500M people.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Q: WHAT IS THE STATE GDP PER CAPITA MAP MODE?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The State GDP Per Capita map mode shows living standards at the
+individual state level — not your country average, but the
+actual economic reality of each state's population.
+
+HOW IT DIFFERS FROM THE COUNTRY GDPPC MAP MODE:
+  The country mode shows national averages. The state mode shows
+  the internal inequality within your nation — your industrial
+  heartland may be Vibrant while your colonial periphery is
+  Squalid, even if your national average looks respectable.
+
+HOW THE TIERS WORK:
+  15 wealth tiers (Abject through Utopian) × 4 state types
+  (Metropolitan / Urban / Agrarian / Rural) = 60 unique
+  living standards descriptions on hover.
+
+  Critically: thresholds shift DOWN for less urbanised states.
+  A rural state at $250 GDPPC is COMFORTABLE.
+  A metropolis at $250 GDPPC is GRIMY.
+
+  This is historically accurate. $250 in 1930s rural Alabama
+  and $250 in 1930s New York City are completely different
+  material conditions. Rural populations need less cash income
+  to achieve the same quality of life — lower rents, home-grown
+  food, lower cost of everything.
+
+THRESHOLD TABLE (state_GDP_per_capita required per tier):
+  Tier             Metro   Urban   Agrarian  Rural
+  Utopian          10000   8000    6000      4500
+  Transcendental   8200    6500    5000      3600
+  Radiant          6500    5000    3600      2500
+  Gilded           5000    3600    2500      1700
+  Opulent          3600    2500    1700      1100
+  Prosperous       2500    1700    1100      700
+  Vibrant          1700    1100    700       450
+  Robust           1100    700     450       250
+  Comfortable      700     450     250       150
+  Decent           450     250     150       80
+  Meager           250     150     80        35
+  Grimy            150     80      35        15
+  Hardscrabble     80      35      15        5
+  Squalid          35      15      5         1
+  Abject           below   below   below     below
+
+HOW TO READ THE TOOLTIP:
+  Hover over any state to see its State GDPPC and State GDP.
+  Hold the cursor to get the full tooltip with tier name,
+  level number, and flavour description of living conditions.
+  Updates every quarter alongside country GDP.
+================================================================

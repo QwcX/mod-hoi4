@@ -1,70 +1,4 @@
-The file changes show corrupted/invalid filenames that appear to be binary or encoded data rather than legitimate source files. Since these aren't recognizable source code files (like .py, .js, .java, etc.) and appear to be problematic artifacts, I'll provide a comprehensive .gitignore to handle potential issues:
 
-```
-# Compiled and build artifacts
-*.pyc
-__pycache__/
-*.o
-*.obj
-*.out
-*.exe
-*.dll
-*.so
-*.a
-*.class
-
-# Dependencies
-.venv/
-venv/
-node_modules/
-.npm/
-.yarn/
-target/
-.build/
-.dist/
-.cache/
-
-# Logs and temp files
-*.log
-*.tmp
-*.swp
-*.swo
-*.bak
-*.~*
-
-# Environment
-.env
-.env.local
-.env.*
-.envrc
-
-# Editors and IDEs
-.vscode/
-.idea/
-*.iml
-*.ipr
-*.iws
-.project
-.classpath
-.settings/
-
-# OS specific
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Icon?
-VolumeIcon.icns
-
-# Coverage and testing
-.coverage
-coverage/
-htmlcov/
-.pytest_cache/
-.mypy_cache/
-.tox/
-nosetests.xml
-
-# Compression and archives
 *.zip
 *.gz
 *.tar
@@ -87,11 +21,3 @@ nosetests.xml
 *.tar.bz2
 *.tar.xz
 *.tar.zst
-
-# Build systems
-.gradle/
-build/
-dist/
-out/
-temp/
-```
