@@ -1,0 +1,161 @@
+scripted_gui = {
+	ge_gdpui_graph_construction_scripted_gui = {
+		window_name = "ge_gdpui_graph_gui"
+		context_type = player_context
+		parent_window_token = ge_construction_tab
+
+		dirty = ge_gdpui_graph_dirty
+
+		visible = {
+			check_variable = { ge_chart_open = 1 }
+		}
+
+		effects = {
+			add_button_click = {
+				ge_calculate_gdp_chart = yes
+
+				ge_compute_y_axis_intervals = yes
+
+				ge_gdpui_add_point_to_graph = yes
+			}
+		}
+
+		triggers = {
+			add_button_visible = { is_debug = yes }
+		}
+
+		# Set up dynamic list to generate one line segment per point
+		dynamic_lists = {
+			line_segments = {
+				array = ge_gdpui_graph_offsets
+				change_scope = no
+				entry_container = ge_gdpui_graph_line_segment
+				index = segment_idx
+			}
+		}
+
+		properties = {
+			segment = {
+				# Sets they position of the line segment to the graph offset
+				# Equal to -y1
+				y = ge_gdpui_graph_offsets^segment_idx
+
+				# Tells the shader how steep to draw the line
+				# Must be equal to (y2 - y1) / 2 + 50
+				frame = ge_gdpui_graph_slopes^segment_idx
+			}
+		}
+	}
+	ge_gdpui_visibility_button_hide_gui = {
+		window_name = "ge_gdpui_visibility_button_hide_container"
+		context_type = player_context
+		parent_window_token = ge_construction_tab
+
+		dirty = ROOT.ge_chart_open
+
+		visible = {
+			check_variable = { ROOT.ge_chart_open = 1 }
+		}
+
+		effects = {
+			visibility_button_hide_click = { set_variable = { ROOT.ge_chart_open = 0 } }
+		}
+	}
+	ge_gdpui_visibility_button_show_gui = {
+		window_name = "ge_gdpui_visibility_button_show_container"
+		context_type = player_context
+		parent_window_token = ge_construction_tab
+
+		dirty = ROOT.ge_chart_open
+
+		visible = {
+			check_variable = { ROOT.ge_chart_open = 0 }
+		}
+
+		effects = {
+			visibility_button_show_click = { set_variable = { ROOT.ge_chart_open = 1 } }
+		}
+	}
+
+	ge_gdpui_graph_diplomacy_scripted_gui = {
+		window_name = "ge_gdpui_diplo_graph_gui"
+		context_type = selected_country_context
+		parent_window_token = ge_selected_country_view
+
+		dirty = ge_gdpui_graph_dirty
+
+		visible = {
+			always = no		# might revisit
+			#check_variable = { ROOT.diplo_ge_chart_open = 1 }
+		}
+
+		effects = {
+			diplo_add_button_click = {
+				ge_calculate_gdp_chart = yes
+
+				ge_compute_y_axis_intervals = yes
+
+				ge_gdpui_add_point_to_graph = yes
+			}
+		}
+
+		# Set up dynamic list to generate one line segment per point
+		dynamic_lists = {
+			line_segments = {
+				array = THIS.ge_gdpui_graph_offsets
+				change_scope = no
+				entry_container = ge_gdpui_diplo_graph_line_segment
+				index = segment_idx
+			}
+		}
+
+		properties = {
+			segment = {
+				# Sets they position of the line segment to the graph offset
+				# Equal to -y1
+				y = ge_gdpui_graph_offsets^segment_idx
+
+				# Tells the shader how steep to draw the line
+				# Must be equal to (y2 - y1) / 2 + 50
+				frame = ge_gdpui_graph_slopes^segment_idx
+			}
+		}
+	}
+
+	ge_gdpui_visibility_diplo_button_hide_gui = {
+		window_name = "ge_gdpui_diplo_visibility_button_hide_container"
+		context_type = selected_country_context
+		parent_window_token = ge_selected_country_view
+
+		dirty = ROOT.diplo_ge_chart_open
+
+		visible = {
+			always = no		# might revisit
+			#check_variable = { ROOT.diplo_ge_chart_open = 1 }
+		}
+
+		effects = {
+			diplo_visibility_button_hide_click = {
+				set_variable = { ROOT.diplo_ge_chart_open = 0 }
+			}
+		}
+	}
+	ge_gdpui_visibility_diplo_button_show_gui = {
+		window_name = "ge_gdpui_diplo_visibility_button_show_container"
+		context_type = selected_country_context
+		parent_window_token = ge_selected_country_view
+
+		dirty = ROOT.diplo_ge_chart_open
+
+		visible = {
+			always = no		# might revisit
+			#check_variable = { ROOT.diplo_ge_chart_open = 0 }
+		}
+
+		effects = {
+			diplo_visibility_button_show_click = {
+				set_variable = { ROOT.diplo_ge_chart_open = 1 }
+			}
+		}
+	}
+}
